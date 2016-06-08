@@ -11,19 +11,19 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <flink.version>1.0.0</flink.version>
-    <beam.version>0.1.0-incubating-SNAPSHOT</beam.version>
+    <flink.version>1.0.3</flink.version>
+    <beam.version>0.2.0-incubating-SNAPSHOT</beam.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.beam</groupId>
-      <artifactId>flink-runner_2.10</artifactId>
+      <artifactId>beam-runners-flink_2.10</artifactId>
       <version>${beam.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
-      <artifactId>flink-runner-examples_2.10</artifactId>
+      <artifactId>beam-runners-flink_2.10-examples</artifactId>
       <version>${beam.version}</version>
     </dependency>
   </dependencies>
