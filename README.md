@@ -1,6 +1,6 @@
 # Apache Beam Starter
 
-This is a starter repo for Apache Beam.
+This is a starter repo for Apache Beam. You can read the blog post [A quick demo of Apache Beam with Docker](https://medium.com/@ecesena/a-quick-demo-of-apache-beam-with-docker-da98b99a502a).
 
 It currently contains a [WordCount pipeline](https://github.com/ecesena/beam-starter/blob/master/src/main/java/com/dataradiant/beam/examples/WordCount.java) for the Apache Flink runner, and it's used in this [Docker image with Apache Beam + Flink](https://github.com/ecesena/docker-beam-flink).
 
@@ -24,3 +24,4 @@ mvn clean package
  - Apache Beam: https://beam.incubator.apache.org
  - Apache Flink: https://flink.apache.org
  - Docker image with Apache Beam + Flink: https://github.com/ecesena/docker-beam-flink
+ - Blog: [A quick demo of Apache Beam with Docker](https://medium.com/@ecesena/a-quick-demo-of-apache-beam-with-docker-da98b99a502a)
