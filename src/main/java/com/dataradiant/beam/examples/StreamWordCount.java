@@ -21,15 +21,22 @@ import org.apache.beam.runners.flink.FlinkPipelineOptions;
 import org.apache.beam.runners.flink.FlinkRunner;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
+import org.apache.beam.sdk.io.kafka.KafkaIO;
 import org.apache.beam.sdk.options.Default;
 import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.*;
+import org.apache.beam.sdk.transforms.windowing.FixedWindows;
+import org.apache.beam.sdk.transforms.windowing.Window;
 import org.apache.beam.sdk.values.KV;
 import org.apache.beam.sdk.values.PCollection;
+import org.apache.beam.sdk.coders.StringUtf8Coder;
+import com.google.common.collect.ImmutableMap;
+import org.joda.time.Duration;
+import java.util.Arrays;
 
-public class WordCount {
+public class StreamWordCount {
 
   public static class ExtractWordsFn extends DoFn<String, String> {
     private final Aggregator<Long, Long> emptyLines =
@@ -78,6 +85,20 @@ public class WordCount {
     }
   }
 
+  // public static class ValuesFn extends SimpleFunction<KV<byte[], String>, String> {
+  //   @Override
+  //   public String apply(KV<byte[], String> input) {
+  //     return input.getValue();
+  //   }
+  // }
+
+  // public static class TrivialCountFn extends SimpleFunction<String, KV<String, Long>> {
+  //   @Override
+  //   public KV<String, Long> apply(String input) {
+  //     return KV.of(input, 1L);
+  //   }
+  // }
+
   /**
    * Options supported by {@link WordCount}.
    * <p>
@@ -93,9 +114,14 @@ public class WordCount {
     @Default.String("/tmp/output.txt")
     String getOutput();
     void setOutput(String value);
+
+    @Description("Fixed window duration, in minutes")
+    @Default.Integer(1)
+    Integer getWindowSize();
+    void setWindowSize(Integer value);
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
 
     Options options = PipelineOptionsFactory.fromArgs(args).withValidation()
         .as(Options.class);
@@ -103,7 +129,16 @@ public class WordCount {
 
     Pipeline p = Pipeline.create(options);
 
-    p.apply("ReadLines", TextIO.Read.from(options.getInput()))
+    KafkaIO.Read<byte[], String> kafkaIOReader = KafkaIO.read()
+        .withBootstrapServers("192.168.99.100:32771")
+        .withTopics(Arrays.asList("beam".split(",")))
+        .updateConsumerProperties(ImmutableMap.of("auto.offset.reset", (Object)"earliest"))
+        .withValueCoder(StringUtf8Coder.of());
+
+    p.apply(kafkaIOReader.withoutMetadata())
+        .apply(Values.<String>create())
+        .apply(Window.<String>into(
+          FixedWindows.of(Duration.standardMinutes(options.getWindowSize()))))
         .apply(new CountWords())
         .apply(MapElements.via(new FormatAsTextFn()))
         .apply("WriteCounts", TextIO.Write.to(options.getOutput()));
