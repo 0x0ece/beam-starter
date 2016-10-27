@@ -12,7 +12,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <flink.version>1.0.3</flink.version>
-    <beam.version>0.2.0-incubating-SNAPSHOT</beam.version>
+    <beam.version>0.2.0-incubating</beam.version>
   </properties>
 
   <dependencies>
