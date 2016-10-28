@@ -48,7 +48,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>com.dataradiant.beam.examples.StreamWordCount</mainClass>
+                  <mainClass>com.dataradiant.beam.examples.WordCount</mainClass>
                 </transformer>
               </transformers>
               <artifactSet>
