@@ -123,7 +123,7 @@ public class StreamWordCount {
 
   public static void main(String[] args) throws Exception {
 
-    Options options = PipelineOptionsFactory.fromArgs(args).withValidation()
+    Options options = PipelineOptionsFactory.fromArgs(args)
         .as(Options.class);
     options.setRunner(FlinkRunner.class);
 
